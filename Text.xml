@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<data>
+  <dialogue id="001">
+    <message>Hello</message>
+    <choices>
+            <choice id="bye">
+              <command>Bye</command>
+            </choice>
+            <choice id="anger">
+              <command>Leave me alone!</command>
+            </choice>
+    </choices>
+  </dialogue>
+  <dialogue id="002">
+    <message>Hi</message>
+    <choices>
+            <choice id="bye">
+              <command>Bye</command>
+            </choice>
+            <choice id="anger">
+              <command>Leave me alone!</command>
+            </choice>
+    </choices>
+  </dialogue>
+</data>
