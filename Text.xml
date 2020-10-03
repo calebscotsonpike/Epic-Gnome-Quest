@@ -3,22 +3,24 @@
   <dialogue id="001">
     <message>Hello</message>
     <choices>
-            <choice id="bye">
-              <command>Bye</command>
+            <choice id="0">
+              <command>Rumours</command>
+                <result>There's trouble at the old well...</result>
             </choice>
-            <choice id="anger">
-              <command>Leave me alone!</command>
+            <choice id="1">
+              <command>Good Bye</command>
+                <result>Fare thee well...</result>
             </choice>
     </choices>
   </dialogue>
   <dialogue id="002">
-    <message>Hi</message>
+    <message>There's trouble at the old well...</message>
     <choices>
-            <choice id="bye">
-              <command>Bye</command>
+            <choice id="0">
+              <command>Accept</command>
             </choice>
-            <choice id="anger">
-              <command>Leave me alone!</command>
+            <choice id="1">
+              <command>Decline</command>
             </choice>
     </choices>
   </dialogue>
