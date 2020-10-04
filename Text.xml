@@ -5,11 +5,11 @@
     <choices>
             <choice id="0">
               <command>Rumours</command>
-                <result>There's trouble at the old well...</result>
+                <result id="002"></result>
             </choice>
             <choice id="1">
               <command>Good Bye</command>
-                <result>Fare thee well...</result>
+                <result id="0">Fare thee well...</result>
             </choice>
     </choices>
   </dialogue>
@@ -18,9 +18,11 @@
     <choices>
             <choice id="0">
               <command>Accept</command>
+                <result id="0">Timmy is trapped!</result>
             </choice>
             <choice id="1">
               <command>Decline</command>
+                <result id="001">Alas...</result>
             </choice>
     </choices>
   </dialogue>
