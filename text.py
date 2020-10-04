@@ -3,27 +3,6 @@ import xml.etree.ElementTree as ET
 tree = ET.parse('Text.xml')
 root = tree.getroot()
 
-class NPC:
-    """
-           Parameters
-           ----------
-           name : str
-               Name of the character
-           num : str
-               Starting dialogue branch
-    """
-    name = "John"
-    num = "001"
-
-
-def game():
-    """Primary game while loop"""
-    npc = NPC
-    while True:
-        talk(npc)
-        break
-
-
 def talk(npc):
     """Conversation while loop (will be)"""
     name = npc.name

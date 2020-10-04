@@ -1,7 +1,3 @@
-# KidsCanCode - Game Development with Pygame video series
-# Tile-based game - Part 1
-# Project setup
-# Video link: https://youtu.be/3UxnelT9aCo
 import pygame as pg
 import sys
 from settings import *
@@ -94,3 +90,12 @@ class Game:
     def show_go_screen(self):
         pass
 
+    def show_text_box(self, words):
+        font = pg.font.Font('freesansbold.ttf', 32)
+        text = font.render(words, True, BLACK, WHITE)
+        textRect = text.get_rect()
+        textRect.center = (WIDTH // 2, HEIGHT // 2)
+        while True:
+            self.screen.fill(WHITE)
+            self.screen.blit(text, textRect)
+            break
