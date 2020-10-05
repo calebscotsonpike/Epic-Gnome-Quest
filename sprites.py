@@ -1,6 +1,5 @@
 import pygame as pg
 from settings import *
-import text as text
 
 class Player(pg.sprite.Sprite):
     def __init__(self, game, x, y):
@@ -34,14 +33,11 @@ class Player(pg.sprite.Sprite):
                 return True
         return False
 
-
     def interact(self, dx=1,dy=1):
         for npc in self.game.npcs:
             if npc.x == self.x + dx or npc.y == self.y + dy or npc.x == self.x - dx or npc.y == self.y - dy:
-                dialogue = text.talk(npc)
-                self.game.text()
+                self.game.talk(npc)
                 self.game.update()
-
 
 
 class NPC(pg.sprite.Sprite):

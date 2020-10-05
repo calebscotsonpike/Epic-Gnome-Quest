@@ -2,7 +2,7 @@ import pygame as pg
 import sys
 from settings import *
 from sprites import *
-
+from text import Text
 
 class Game:
     def __init__(self):
@@ -13,12 +13,14 @@ class Game:
         pg.key.set_repeat(500, 100)
         self.load_data()
         pg.font.init()
+        self.user_text = ''
 
     def load_data(self):
         pass
 
     def new(self):
         # initialize all variables and do all the setup for a new game
+        self.text = Text(self)
         self.all_sprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
         self.player = Player(self, 10, 10)
@@ -42,9 +44,8 @@ class Game:
         while self.playing:
             self.dt = self.clock.tick(FPS) / 1000
             self.events()
-            self.update()
             self.draw()
-            self.text()
+            self.update()
 
 
     def quit(self):
@@ -54,6 +55,7 @@ class Game:
     def update(self):
         # update portion of the game loop
         self.all_sprites.update()
+        pg.display.flip()
 
     def draw_grid(self):
         for x in range(0, WIDTH, TILESIZE):
@@ -65,14 +67,15 @@ class Game:
         self.screen.fill(BGCOLOR)
         self.draw_grid()
         self.all_sprites.draw(self.screen)
-        #pg.display.flip()
 
-    def text(self):
+    def talk(self, npc):
+        self.text.talk(npc)
+
+    def draw_text(self, dialogue):
         base_font = pg.font.Font(None, 32)
-        user_text = 'Hello :)'
-        text_surface = base_font.render(user_text, True, (WHITE))
+        text_surface = base_font.render(dialogue, True, (WHITE))
         self.screen.blit(text_surface, (10, 10))
-        pg.display.flip()
+
 
     def events(self):
         # catch all events here
@@ -92,6 +95,9 @@ class Game:
                     self.player.move(dy=1)
                 if event.key == pg.K_SPACE:
                     self.player.interact()
+                    #if event.key == pg.KEYDOWN:
+                        #self.user_text = event.unicode
+
 
     def show_start_screen(self):
         pass
