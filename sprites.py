@@ -38,8 +38,10 @@ class Player(pg.sprite.Sprite):
     def interact(self, dx=1,dy=1):
         for npc in self.game.npcs:
             if npc.x == self.x + dx or npc.y == self.y + dy or npc.x == self.x - dx or npc.y == self.y - dy:
-                self.game.show_text_box('Yo yo yo')
-                text.talk(npc)
+                dialogue = text.talk(npc)
+                self.game.text()
+                self.game.update()
+
 
 
 class NPC(pg.sprite.Sprite):

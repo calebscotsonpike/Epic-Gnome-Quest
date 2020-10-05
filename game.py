@@ -3,6 +3,7 @@ import sys
 from settings import *
 from sprites import *
 
+
 class Game:
     def __init__(self):
         pg.init()
@@ -11,6 +12,7 @@ class Game:
         self.clock = pg.time.Clock()
         pg.key.set_repeat(500, 100)
         self.load_data()
+        pg.font.init()
 
     def load_data(self):
         pass
@@ -42,6 +44,8 @@ class Game:
             self.events()
             self.update()
             self.draw()
+            self.text()
+
 
     def quit(self):
         pg.quit()
@@ -61,6 +65,13 @@ class Game:
         self.screen.fill(BGCOLOR)
         self.draw_grid()
         self.all_sprites.draw(self.screen)
+        #pg.display.flip()
+
+    def text(self):
+        base_font = pg.font.Font(None, 32)
+        user_text = 'Hello :)'
+        text_surface = base_font.render(user_text, True, (WHITE))
+        self.screen.blit(text_surface, (10, 10))
         pg.display.flip()
 
     def events(self):
@@ -82,20 +93,8 @@ class Game:
                 if event.key == pg.K_SPACE:
                     self.player.interact()
 
-
-
     def show_start_screen(self):
         pass
 
     def show_go_screen(self):
         pass
-
-    def show_text_box(self, words):
-        font = pg.font.Font('freesansbold.ttf', 32)
-        text = font.render(words, True, BLACK, WHITE)
-        textRect = text.get_rect()
-        textRect.center = (WIDTH // 2, HEIGHT // 2)
-        while True:
-            self.screen.fill(WHITE)
-            self.screen.blit(text, textRect)
-            break
