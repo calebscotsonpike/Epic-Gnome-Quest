@@ -39,7 +39,7 @@ class Game:
         pass
 
     def new(self):
-        john = NPC(self, 3, 3, '001', 'John')
+        john = NPC(self, 3, 3, '003', 'John')
         jeff = NPC(self, 20, 10, '001', 'Jeff')
         self.npcs = [john, jeff]
 
@@ -85,8 +85,10 @@ class Game:
         self.all_sprites.draw(self.screen)
 
     def talk(self):
-        self.text.talk(self.object, self.input)
+        off = self.text.talk(self.object.name, self.object.dialogue_num, self.input)
         self.draw_input_text()
+        if off is True:
+            self.interact = False
 
     def draw_text(self, dialogue, line):
         text_surface = self.base_font.render(dialogue, True, (WHITE))

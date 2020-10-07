@@ -7,21 +7,26 @@ class Text():
         self.tree = ET.parse('Text.xml')
         self.root = self.tree.getroot()
 
-    def talk(self, npc, response):
+    def talk(self, npc_name, dialogue_num, response):
         """Conversation while loop (will be)"""
+        if response == '':
+            response = None
         line = 0
-        name = npc.name
-        num = npc.dialogue_num
-
-        self.conversation(name, num, None, line)
-        if response is None:
-            return False
+        dialogue_num = self.conversation(npc_name, dialogue_num, response, line)
         if response in ['0', '1']:
-            num = self.conversation(name, num, response, line)
-        else:
-            self.game.draw_text('INVALID', (line+25))
-        if num == '0':
+            dialogue_num = self.conversation(npc_name, dialogue_num, None, line)
+            dialogue_num = self.conversation(npc_name, dialogue_num, response, line)
+            self.conversation(npc_name, dialogue_num, response, line)
+        if dialogue_num == '0':
             return True
+
+
+        #if response in ['']:
+        #    return num
+        #else:
+        #    self.game.draw_text('INVALID', (line+25))
+        #if num == '0':
+        #    return True
 
     def conversation(self, name, num, response, line):
         """XML parser.
@@ -45,7 +50,7 @@ class Text():
         for branch in self.root.iter('data'):
             for dialogue in branch:
                 if dialogue.get("id") == num:
-                    if None == response:
+                    if response is None:
                         # get initial speech
                         for message in dialogue.iter('message'):
                             self.game.draw_text(name + ": " + message.text, line)
@@ -61,7 +66,7 @@ class Text():
                             if choice.get("id") == response:
                                 for result in choice.iter('result'):
                                     if result.text is not None:
-                                        self.game.draw_text(result.text, 40)
+                                        self.game.draw_text(result.text, line)
                                         line += 25
                                     num = result.get("id")
                                     return num

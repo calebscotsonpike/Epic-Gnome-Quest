@@ -13,6 +13,7 @@
             </choice>
     </choices>
   </dialogue>
+
   <dialogue id="002">
     <message>There's trouble at the old well...</message>
     <choices>
@@ -23,6 +24,20 @@
             <choice id="1">
               <command>Decline</command>
                 <result id="001">Alas...</result>
+            </choice>
+    </choices>
+  </dialogue>
+
+    <dialogue id="003">
+    <message>Help! Help! I'm trapped down the well</message>
+    <choices>
+            <choice id="0">
+              <command>Accept</command>
+                <result id="0">Find a rope!</result>
+            </choice>
+            <choice id="1">
+              <command>Decline</command>
+                <result id="001">You can't leave me here!</result>
             </choice>
     </choices>
   </dialogue>
