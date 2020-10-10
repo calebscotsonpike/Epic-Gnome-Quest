@@ -1,5 +1,5 @@
 ﻿# Epic-Gnome-Quest
- ![Travis Build](https://api.travis-ci.com/tpetricek/silly-bot.svg?branch=master)
+ ![Travis Build](https://travis-ci.com/ScotsonPike/Epic-Gnome-Quest.svg?branch=main) 
  - The 2D gnome adventure simulator
  - Exploring pygame, dialogue waterfalls and game development basics
 ## Installation 
