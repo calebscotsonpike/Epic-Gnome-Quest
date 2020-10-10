@@ -2,7 +2,6 @@ import sys
 from sprites import *
 from text import Text
 
-
 class Game:
     def __init__(self):
         pg.init()
