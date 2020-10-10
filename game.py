@@ -17,6 +17,7 @@ class Game:
         self.user_text = ''
         self.input = ''
 
+        self.input_rect = pg.Rect(0, 0, 140, 32)
         self.colour_active = pg.Color('lightskyblue3')
         self.colour_passive = pg.Color('gray15')
         self.colour = self.colour_passive
