@@ -39,6 +39,8 @@ class Player(pg.sprite.Sprite):
             if npc.x == self.x + dx or npc.y == self.y + dy or npc.x == self.x - dx or npc.y == self.y - dy:
                 self.game.interact = True
                 self.game.object = npc
+                self.game.current_dialogue_num = npc.dialogue_num
+
 
 class NPC(pg.sprite.Sprite):
     def __init__(self, game, x, y, dialogue_num, name):
