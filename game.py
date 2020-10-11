@@ -35,6 +35,10 @@ class Game:
 
         self.onscreen_text = [] #((x, y), 'line')
 
+        pg.mixer.music.load('Music/EpicGnomeQuestAmbience.mp3')
+        pg.mixer.music.set_volume(0.65)
+        pg.mixer.music.play(-1)
+
     def load_data(self):
         pass
 
