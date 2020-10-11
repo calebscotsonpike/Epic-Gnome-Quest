@@ -7,15 +7,18 @@ class Player(pg.sprite.Sprite):
         self.groups = game.all_sprites
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        # self.image = pg.Surface((TILESIZE, TILESIZE))
-        #self.image.fill(YELLOW)
-        gnome = pg.image.load('Sprites/gnome.png').convert_alpha()
-        self.image = gnome
+        self.gnome_left = pg.image.load('Sprites/gnome_left.png').convert_alpha()
+        self.gnome_right = pg.image.load('Sprites/gnome_right.png').convert_alpha()
+        self.image = self.gnome_left
         self.rect = self.image.get_rect()
         self.x = x
         self.y = y
 
     def move(self, dx=0, dy=0):
+        if dx > 0:
+            self.image = self.gnome_right
+        else:
+            self.image = self.gnome_left
         if not (self.collide_with_wall(dx, dy) or self.collide_with_npc(dx, dy)):
             self.x += dx
             self.y += dy
@@ -49,8 +52,11 @@ class NPC(pg.sprite.Sprite):
         self.groups = game.all_sprites
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = pg.Surface((TILESIZE, TILESIZE))
-        self.image.fill(RED)
+        if name == 'John':
+            image = pg.image.load('Sprites/John.png').convert_alpha()
+        else:
+            image = pg.image.load('Sprites/Jeff.png').convert_alpha()
+        self.image = image
         self.rect = self.image.get_rect()
         self.x = x
         self.y = y
@@ -78,8 +84,22 @@ class Wall(pg.sprite.Sprite):
         self.groups = game.all_sprites, game.walls
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = pg.Surface((TILESIZE, TILESIZE))
-        self.image.fill(GREEN)
+        wall = pg.image.load('Sprites/wall.png').convert_alpha()
+        self.image = wall
+        #self.image.fill(GREEN)
+        self.rect = self.image.get_rect()
+        self.x = x
+        self.y = y
+        self.rect.x = x * TILESIZE
+        self.rect.y = y * TILESIZE
+
+class Grass(pg.sprite.Sprite):
+    def __init__(self, game, x, y):
+        self.groups = game.all_sprites, game.grasses
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        grass = pg.image.load('Sprites/grass.png').convert_alpha()
+        self.image = grass
         self.rect = self.image.get_rect()
         self.x = x
         self.y = y

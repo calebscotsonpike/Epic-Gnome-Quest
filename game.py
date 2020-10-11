@@ -30,7 +30,7 @@ class Game:
         self.text = Text(self)
         self.all_sprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
-        self.player = Player(self, 10, 10)
+        self.grasses = pg.sprite.Group()
         self.npcs = []
 
         self.onscreen_text = [] #((x, y), 'line')
@@ -39,19 +39,22 @@ class Game:
         pass
 
     def new(self):
+        for x in range(0, 100):
+            for y in range(0, 100):
+                Grass(self, x, y)
+        for x in range(2, 5):
+            Wall(self, x, 1)
+            Wall(self, x, 5)
+        for y in range(2, 5):
+            Wall(self, 1, y)
+        for y in range(2, 3):
+            Wall(self, 5, y)
+        for y in range(4, 5):
+            Wall(self, 5, y)
         john = NPC(self, 3, 3, '003', 'John')
         jeff = NPC(self, 20, 10, '001', 'Jeff')
         self.npcs = [john, jeff]
-
-        for x in range(1, 5):
-            Wall(self, x, 1)
-            Wall(self, x, 5)
-        for y in range(1, 5):
-            Wall(self, 1, y)
-        for y in range(1, 3):
-            Wall(self, 5, y)
-        for y in range(4, 6):
-            Wall(self, 5, y)
+        self.player = Player(self, 10, 10)
 
     def run(self):
         # game loop - set self.playing = False to end the game
@@ -82,7 +85,7 @@ class Game:
 
     def draw(self):
         self.screen.fill(BGCOLOR)
-        self.draw_grid()
+        #self.draw_grid()
         self.all_sprites.draw(self.screen)
 
     def talk(self):
