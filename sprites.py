@@ -52,8 +52,8 @@ class NPC(pg.sprite.Sprite):
         self.groups = game.all_sprites
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        if name == 'John':
-            image = pg.image.load('Sprites/John.png').convert_alpha()
+        if name == 'Timmy':
+            image = pg.image.load('Sprites/Timmy.png').convert_alpha()
         else:
             image = pg.image.load('Sprites/Jeff.png').convert_alpha()
         self.image = image
@@ -86,6 +86,20 @@ class Wall(pg.sprite.Sprite):
         self.game = game
         wall = pg.image.load('Sprites/wall.png').convert_alpha()
         self.image = wall
+        #self.image.fill(GREEN)
+        self.rect = self.image.get_rect()
+        self.x = x
+        self.y = y
+        self.rect.x = x * TILESIZE
+        self.rect.y = y * TILESIZE
+
+class Well(pg.sprite.Sprite):
+    def __init__(self, game, x, y):
+        self.groups = game.all_sprites, game.walls
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        well = pg.image.load('Sprites/well.png').convert_alpha()
+        self.image = well
         #self.image.fill(GREEN)
         self.rect = self.image.get_rect()
         self.x = x

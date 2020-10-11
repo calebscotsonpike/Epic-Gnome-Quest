@@ -37,7 +37,7 @@
             </choice>
             <choice id="1">
               <command>Decline</command>
-                <result id="001">You can't leave me here!</result>
+                <result id="0">You can't leave me here!</result>
             </choice>
     </choices>
   </dialogue>

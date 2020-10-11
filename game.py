@@ -39,21 +39,38 @@ class Game:
         pass
 
     def new(self):
-        for x in range(0, 100):
-            for y in range(0, 100):
+        for x in range(0, 30):
+            for y in range(0, 30):
                 Grass(self, x, y)
+        #Around Well
         for x in range(2, 5):
-            Wall(self, x, 1)
             Wall(self, x, 5)
-        for y in range(2, 5):
+            Wall(self, x, 9)
+        for y in range(6, 9):
             Wall(self, 1, y)
-        for y in range(2, 3):
+        for y in range(6, 7):
             Wall(self, 5, y)
-        for y in range(4, 5):
+        for y in range(8, 9):
             Wall(self, 5, y)
-        john = NPC(self, 3, 3, '003', 'John')
-        jeff = NPC(self, 20, 10, '001', 'Jeff')
-        self.npcs = [john, jeff]
+        # wall down
+        for y in range(0, 2):
+            Wall(self, 9, y)
+        for y in range(3, 15):
+            Wall(self, 9, y)
+
+        self.draw_house(12, 3, 4)
+        # house
+        # for x in range(12, 16):
+        #     Wall(self, x, 3)
+        #     Wall(self, x, 6)
+        # for y in range(3, 7):
+        #     Wall(self, 12, y)
+        #     Wall(self, 16, y)
+
+        Well(self, 3, 7)
+        timmy = NPC(self, 3, 7, '003', 'Timmy')
+        jeff = NPC(self, 12, 10, '001', 'Jeff')
+        self.npcs = [timmy, jeff]
         self.player = Player(self, 10, 10)
 
     def run(self):
@@ -77,11 +94,18 @@ class Game:
         self.all_sprites.update()
         pg.display.flip()
 
-    def draw_grid(self):
-        for x in range(0, WIDTH, TILESIZE):
-            pg.draw.line(self.screen, LIGHTGREY, (x, 0), (x, HEIGHT))
-        for y in range(0, HEIGHT, TILESIZE):
-            pg.draw.line(self.screen, LIGHTGREY, (0, y), (WIDTH, y))
+    def draw_house(self, x, y, size):
+        for x in range(x, (x + size)):
+            Wall(self, x, y)
+            Wall(self, x, (y + size))
+        for y in range(y, (y + size)):
+            Wall(self, x, y)
+            Wall(self, (x - size), y)
+    # def draw_grid(self):
+    #     for x in range(0, WIDTH, TILESIZE):
+    #         pg.draw.line(self.screen, LIGHTGREY, (x, 0), (x, HEIGHT))
+    #     for y in range(0, HEIGHT, TILESIZE):
+    #         pg.draw.line(self.screen, LIGHTGREY, (0, y), (WIDTH, y))
 
     def draw(self):
         self.screen.fill(BGCOLOR)
