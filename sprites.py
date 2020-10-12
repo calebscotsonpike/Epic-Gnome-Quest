@@ -1,6 +1,6 @@
 import pygame as pg
 from settings import *
-
+import random
 
 class Player(pg.sprite.Sprite):
     def __init__(self, game, x, y):
@@ -19,7 +19,7 @@ class Player(pg.sprite.Sprite):
             self.image = self.gnome_right
         else:
             self.image = self.gnome_left
-        if not (self.collide_with_wall(dx, dy) or self.collide_with_npc(dx, dy)):
+        if not (self.collide_with_wall(dx, dy) or self.collide_with_npc(dx, dy) or self.collide_with_block(dx, dy)):
             self.x += dx
             self.y += dy
 
@@ -39,6 +39,12 @@ class Player(pg.sprite.Sprite):
                 return True
         return False
 
+    def collide_with_block(self, dx=0, dy=0):
+        for block in self.game.blocks:
+            if block.x == self.x + dx and block.y == self.y + dy:
+                return True
+        return False
+
     def interact(self, dx=1, dy=1):
         for npc in self.game.npcs:
             if npc.x == self.x + dx or npc.y == self.y + dy or npc.x == self.x - dx or npc.y == self.y - dy:
@@ -53,17 +59,28 @@ class NPC(pg.sprite.Sprite):
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
         if name == 'Timmy':
-            image = pg.image.load('Sprites/Timmy.png').convert_alpha()
+            self.image_left = pg.image.load('Sprites/Timmy.png').convert_alpha()
         else:
-            image = pg.image.load('Sprites/Jeff.png').convert_alpha()
-        self.image = image
+            self.image_left = pg.image.load('Sprites/Jeff_left.png').convert_alpha()
+            self.image_right = pg.image.load('Sprites/Jeff_right.png').convert_alpha()
+        self.image = self.image_left
         self.rect = self.image.get_rect()
         self.x = x
         self.y = y
         self.dialogue_num = dialogue_num
         self.name = name
+        self.moved = False
+        self.movement_array = []
+        random.seed(1)
+
+    def set_dialogue_num(self, new_dialogue_num):
+        self.dialogue_num = new_dialogue_num
 
     def move(self, dx=0, dy=0):
+        if dx > 0:
+            self.image = self.image_right
+        else:
+            self.image = self.image_left
         if not self.collide_with_walls(dx, dy):
             self.x += dx
             self.y += dy
@@ -71,6 +88,21 @@ class NPC(pg.sprite.Sprite):
     def update(self):
         self.rect.x = self.x * TILESIZE
         self.rect.y = self.y * TILESIZE
+
+    def npc_movement_grid(self):
+        for x in range(2):
+            for y in range(2):
+                self.movement_array.append((x, y))
+
+    def random_movement(self):
+        value = random.randint(0, 1000)
+        if value > 998:
+            if self.moved:
+                self.move(-1, 0)
+                self.moved = False
+            else:
+                self.move(1, 0)
+                self.moved = True
 
     def collide_with_walls(self, dx=0, dy=0):
         for wall in self.game.walls:
@@ -93,6 +125,32 @@ class Wall(pg.sprite.Sprite):
         self.rect.x = x * TILESIZE
         self.rect.y = y * TILESIZE
 
+class Block(pg.sprite.Sprite):
+    def __init__(self, game, x, y):
+        self.groups = game.all_sprites, game.blocks
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        block = pg.image.load('Sprites/grass.png').convert_alpha()
+        self.image = block
+        self.rect = self.image.get_rect()
+        self.x = x
+        self.y = y
+        self.rect.x = x * TILESIZE
+        self.rect.y = y * TILESIZE
+
+class Tree(pg.sprite.Sprite):
+    def __init__(self, game, x, y):
+        self.groups = game.all_sprites, game.trees
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        tree = pg.image.load('Sprites/tree.png').convert_alpha()
+        self.image = tree
+        self.rect = self.image.get_rect()
+        self.x = x
+        self.y = y
+        self.rect.x = x * TILESIZE
+        self.rect.y = y * TILESIZE
+
 class Well(pg.sprite.Sprite):
     def __init__(self, game, x, y):
         self.groups = game.all_sprites, game.walls
@@ -100,7 +158,19 @@ class Well(pg.sprite.Sprite):
         self.game = game
         well = pg.image.load('Sprites/well.png').convert_alpha()
         self.image = well
-        #self.image.fill(GREEN)
+        self.rect = self.image.get_rect()
+        self.x = x
+        self.y = y
+        self.rect.x = x * TILESIZE
+        self.rect.y = y * TILESIZE
+
+class House(pg.sprite.Sprite):
+    def __init__(self, game, x, y):
+        self.groups = game.all_sprites, game.houses
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        house = pg.image.load('Sprites/house.png').convert_alpha()
+        self.image = house
         self.rect = self.image.get_rect()
         self.x = x
         self.y = y

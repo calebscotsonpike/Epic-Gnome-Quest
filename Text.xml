@@ -23,12 +23,16 @@
             </choice>
             <choice id="1">
               <command>Decline</command>
-                <result id="001">Alas...</result>
+                <result id="0">Alas...</result>
             </choice>
     </choices>
   </dialogue>
 
-    <dialogue id="003">
+  <dialogue id="003">
+    <message id="0">Get get going!</message>
+  </dialogue>
+
+    <dialogue id="004">
     <message>Help! Help! I'm trapped down the well</message>
     <choices>
             <choice id="0">

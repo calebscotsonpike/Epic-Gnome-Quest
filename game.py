@@ -31,7 +31,11 @@ class Game:
         self.all_sprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
         self.grasses = pg.sprite.Group()
+        self.houses = pg.sprite.Group()
+        self.blocks = pg.sprite.Group()
+        self.trees = pg.sprite.Group()
         self.npcs = []
+
 
         self.onscreen_text = [] #((x, y), 'line')
 
@@ -61,21 +65,17 @@ class Game:
             Wall(self, 9, y)
         for y in range(3, 15):
             Wall(self, 9, y)
+        self.draw_house(12, 3, 3)
+        self.draw_house(16, 3, 3)
+        self.draw_house(20, 3, 3)
+        self.draw_trees()
 
-        self.draw_house(12, 3, 4)
-        # house
-        # for x in range(12, 16):
-        #     Wall(self, x, 3)
-        #     Wall(self, x, 6)
-        # for y in range(3, 7):
-        #     Wall(self, 12, y)
-        #     Wall(self, 16, y)
-
+        timmy = NPC(self, 3, 7, '004', 'Timmy')
         Well(self, 3, 7)
-        timmy = NPC(self, 3, 7, '003', 'Timmy')
         jeff = NPC(self, 12, 10, '001', 'Jeff')
         self.npcs = [timmy, jeff]
-        self.player = Player(self, 10, 10)
+        self.npcs[1].npc_movement_grid()
+        self.player = Player(self, 21, 5)
 
     def run(self):
         # game loop - set self.playing = False to end the game
@@ -84,7 +84,8 @@ class Game:
             self.dt = self.clock.tick(FPS) / 1000
             self.events()
             self.draw()
-            self.check_interact()
+            if not self.check_interact():
+                self.npcs[1].random_movement()
             self.draw_on_screen_text()
             self.check_active()
             self.update()
@@ -99,21 +100,26 @@ class Game:
         pg.display.flip()
 
     def draw_house(self, x, y, size):
+        Block(self, x+1, y-1)
         for x in range(x, (x + size)):
-            Wall(self, x, y)
-            Wall(self, x, (y + size))
-        for y in range(y, (y + size)):
-            Wall(self, x, y)
-            Wall(self, (x - size), y)
-    # def draw_grid(self):
-    #     for x in range(0, WIDTH, TILESIZE):
-    #         pg.draw.line(self.screen, LIGHTGREY, (x, 0), (x, HEIGHT))
-    #     for y in range(0, HEIGHT, TILESIZE):
-    #         pg.draw.line(self.screen, LIGHTGREY, (0, y), (WIDTH, y))
+            Block(self, x, y)
+        House(self, x-2, y-1)
+
+    def draw_trees(self):
+        self.draw_tree(3, 3)
+        self.draw_tree(7, 4)
+        self.draw_tree(11, 4)
+        self.draw_tree(13, 1)
+        for x in range(10, 22):
+            if x % 2:
+                self.draw_tree(x, 12)
+
+    def draw_tree(self, x, y):
+        Block(self, x, y)
+        Tree(self, x, y)
 
     def draw(self):
         self.screen.fill(BGCOLOR)
-        #self.draw_grid()
         self.all_sprites.draw(self.screen)
 
     def talk(self):
@@ -121,6 +127,12 @@ class Game:
         self.draw_input_text()
         self.input = ''
         if self.current_dialogue_num == '0':
+            i = 0
+            for npc in self.npcs:
+                if npc.name == self.object.name:
+                    self.npcs[i].dialogue_num = '003'
+                i += 1
+            self.current_dialogue_num = ''
             self.interact = False
 
     def draw_text(self, dialogue, x=0, y=0):
@@ -150,6 +162,9 @@ class Game:
     def check_interact(self):
         if self.interact or self.input is ['0', '1']:
             self.talk()
+            return True
+        else:
+            return False
 
     def events(self):
         # catch all events here

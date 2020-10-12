@@ -42,6 +42,8 @@ class Text():
                         # get initial speech
                         for message in dialogue.iter('message'):
                             self.game.onscreen_text.append(((0, y), name + ": " + message.text))
+                            if message.get('id') is not None:
+                                dialogue_num = message.get('id')
                             y += 32
                         i = 0
                         for choice in dialogue.iter('command'):
