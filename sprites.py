@@ -81,9 +81,10 @@ class NPC(pg.sprite.Sprite):
             self.image = self.image_right
         else:
             self.image = self.image_left
-        if not self.collide_with_walls(dx, dy):
+        if not self.collide_with_walls(dx, dy) and not self.collide_with_player(dx, dy):
             self.x += dx
             self.y += dy
+            self.moved = True
 
     def update(self):
         self.rect.x = self.x * TILESIZE
@@ -104,26 +105,17 @@ class NPC(pg.sprite.Sprite):
                 self.move(1, 0)
                 self.moved = True
 
+    def collide_with_player(self, dx=0, dy=0):
+        if self.game.player.x == self.x + dx and self.game.player.y == self.y + dy:
+            return True
+        return False
+
     def collide_with_walls(self, dx=0, dy=0):
         for wall in self.game.walls:
             if wall.x == self.x + dx and wall.y == self.y + dy:
                 return True
         return False
 
-
-class Wall(pg.sprite.Sprite):
-    def __init__(self, game, x, y):
-        self.groups = game.all_sprites, game.walls
-        pg.sprite.Sprite.__init__(self, self.groups)
-        self.game = game
-        wall = pg.image.load('Sprites/wall.png').convert_alpha()
-        self.image = wall
-        #self.image.fill(GREEN)
-        self.rect = self.image.get_rect()
-        self.x = x
-        self.y = y
-        self.rect.x = x * TILESIZE
-        self.rect.y = y * TILESIZE
 
 class Block(pg.sprite.Sprite):
     def __init__(self, game, x, y):
@@ -138,31 +130,6 @@ class Block(pg.sprite.Sprite):
         self.rect.x = x * TILESIZE
         self.rect.y = y * TILESIZE
 
-class Tree(pg.sprite.Sprite):
-    def __init__(self, game, x, y):
-        self.groups = game.all_sprites, game.trees
-        pg.sprite.Sprite.__init__(self, self.groups)
-        self.game = game
-        tree = pg.image.load('Sprites/tree.png').convert_alpha()
-        self.image = tree
-        self.rect = self.image.get_rect()
-        self.x = x
-        self.y = y
-        self.rect.x = x * TILESIZE
-        self.rect.y = y * TILESIZE
-
-class Well(pg.sprite.Sprite):
-    def __init__(self, game, x, y):
-        self.groups = game.all_sprites, game.walls
-        pg.sprite.Sprite.__init__(self, self.groups)
-        self.game = game
-        well = pg.image.load('Sprites/well.png').convert_alpha()
-        self.image = well
-        self.rect = self.image.get_rect()
-        self.x = x
-        self.y = y
-        self.rect.x = x * TILESIZE
-        self.rect.y = y * TILESIZE
 
 class House(pg.sprite.Sprite):
     def __init__(self, game, x, y):
@@ -176,6 +143,24 @@ class House(pg.sprite.Sprite):
         self.y = y
         self.rect.x = x * TILESIZE
         self.rect.y = y * TILESIZE
+
+
+class Object(pg.sprite.Sprite):
+    def __init__(self, game, sprite_path, x, y, collide=0):
+        if collide == 1:
+            self.groups = game.all_sprites, game.objects, game.walls
+        else:
+            self.groups = game.all_sprites, game.objects
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        image = pg.image.load(sprite_path).convert_alpha()
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.x = x
+        self.y = y
+        self.rect.x = x * TILESIZE
+        self.rect.y = y * TILESIZE
+
 
 class Grass(pg.sprite.Sprite):
     def __init__(self, game, x, y):

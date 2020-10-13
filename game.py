@@ -34,13 +34,13 @@ class Game:
         self.houses = pg.sprite.Group()
         self.blocks = pg.sprite.Group()
         self.trees = pg.sprite.Group()
+        self.objects = pg.sprite.Group()
         self.npcs = []
-
 
         self.onscreen_text = [] #((x, y), 'line')
 
         pg.mixer.music.load('Music/EpicGnomeQuestAmbience.mp3')
-        pg.mixer.music.set_volume(0.65)
+        pg.mixer.music.set_volume(0.6)
         pg.mixer.music.play(-1)
 
     def load_data(self):
@@ -50,28 +50,18 @@ class Game:
         for x in range(0, 30):
             for y in range(0, 30):
                 Grass(self, x, y)
-        #Around Well
-        for x in range(2, 5):
-            Wall(self, x, 5)
-            Wall(self, x, 9)
-        for y in range(6, 9):
-            Wall(self, 1, y)
-        for y in range(6, 7):
-            Wall(self, 5, y)
-        for y in range(8, 9):
-            Wall(self, 5, y)
         # wall down
         for y in range(0, 2):
-            Wall(self, 9, y)
+            Object(self, 'Sprites/wall.png', 9, y, 1)
         for y in range(3, 15):
-            Wall(self, 9, y)
+            Object(self, 'Sprites/wall.png', 9, y, 1)
         self.draw_house(12, 3, 3)
         self.draw_house(16, 3, 3)
         self.draw_house(20, 3, 3)
         self.draw_trees()
 
         timmy = NPC(self, 3, 7, '004', 'Timmy')
-        Well(self, 3, 7)
+        Object(self, 'Sprites/well.png', 3, 7)
         jeff = NPC(self, 12, 10, '001', 'Jeff')
         self.npcs = [timmy, jeff]
         self.npcs[1].npc_movement_grid()
@@ -106,17 +96,24 @@ class Game:
         House(self, x-2, y-1)
 
     def draw_trees(self):
-        self.draw_tree(3, 3)
-        self.draw_tree(7, 4)
-        self.draw_tree(11, 4)
-        self.draw_tree(13, 1)
+        Object(self, 'Sprites/tree.png', 3, 3, 1)
+        Object(self, 'Sprites/tree.png', 7, 4, 1)
+        Object(self, 'Sprites/tree.png', 11, 4, 1)
+        Object(self, 'Sprites/tree.png', 10, 4, 1)
+        Object(self, 'Sprites/tree.png', 13, 1, 1)
         for x in range(10, 22):
             if x % 2:
-                self.draw_tree(x, 12)
-
-    def draw_tree(self, x, y):
-        Block(self, x, y)
-        Tree(self, x, y)
+                Object(self, 'Sprites/tree.png', x, 12, 1)
+                # Around Well
+                for x in range(2, 5):
+                    Object(self, 'Sprites/tree.png', x, 5, 1)
+                    Object(self, 'Sprites/tree.png', x, 9, 1)
+                for y in range(6, 9):
+                    Object(self, 'Sprites/tree.png', 1, y, 1)
+                for y in range(6, 7):
+                    Object(self, 'Sprites/tree.png', 5, y, 1)
+                for y in range(8, 9):
+                    Object(self, 'Sprites/tree.png', 5, y, 1)
 
     def draw(self):
         self.screen.fill(BGCOLOR)
