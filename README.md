@@ -2,6 +2,9 @@
  ![Travis Build](https://travis-ci.com/ScotsonPike/Epic-Gnome-Quest.svg?branch=main) 
  - The 2D gnome adventure simulator
  - Exploring pygame, dialogue waterfalls and game development basics
+ 
+ ![alt text](https://github.com/ScotsonPike/Epic-Gnome-Quest/blob/Main/Pictures/EpicGnomePic.png?raw=true)
+ 
 ## Installation 
 python -m pip install -U pygame --user
 
