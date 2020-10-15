@@ -1,5 +1,9 @@
+import pygame as pg
 import sys
+from os import path
+from settings import *
 from sprites import *
+from tile_map import *
 from text import Text
 
 class Game:
@@ -29,11 +33,12 @@ class Game:
         # initialize all variables and do all the setup for a new game
         self.text = Text(self)
         self.all_sprites = pg.sprite.Group()
-        self.walls = pg.sprite.Group()
         self.grasses = pg.sprite.Group()
         self.houses = pg.sprite.Group()
+        self.walls = pg.sprite.Group()
         self.blocks = pg.sprite.Group()
-        self.trees = pg.sprite.Group()
+        self.items = pg.sprite.Group()
+        self.doors = pg.sprite.Group()
         self.objects = pg.sprite.Group()
         self.npcs = []
 
@@ -44,28 +49,36 @@ class Game:
         pg.mixer.music.play(-1)
 
     def load_data(self):
-        pass
+        game_folder = path.dirname(__file__)
+        self.map = Map(path.join(game_folder, 'Maps/map1.txt'))
 
     def new(self):
-        for x in range(0, 30):
-            for y in range(0, 30):
-                Grass(self, x, y)
-        # wall down
-        for y in range(0, 2):
-            Object(self, 'Sprites/wall.png', 9, y, 1)
-        for y in range(3, 15):
-            Object(self, 'Sprites/wall.png', 9, y, 1)
-        self.draw_house(12, 3, 3)
-        self.draw_house(16, 3, 3)
-        self.draw_house(20, 3, 3)
-        self.draw_trees()
-
-        timmy = NPC(self, 3, 7, '004', 'Timmy')
-        Object(self, 'Sprites/well.png', 3, 7)
-        jeff = NPC(self, 12, 10, '001', 'Jeff')
+        # Object(self, 'Sprites/rope.png', 14, 12, 2)
+        timmy = ''
+        jeff = ''
+        for row, tiles in enumerate(self.map.data):
+            for col, tile in enumerate(tiles):
+                if tile == '.':
+                    Object(self, 'Sprites/grass.png', col, row)
+                if tile == '1':
+                    Object(self, 'Sprites/wall.png', col, row, 1)
+                if tile == 't':
+                    Object(self, 'Sprites/grass.png', col, row)
+                    Object(self, 'Sprites/tree.png', col, row, 1)
+            for col, tile in enumerate(tiles):
+                if tile == 'h':
+                    self.draw_house(col, row, 3)
+                if tile == 'w':
+                    timmy = NPC(self, col, row, '004', 'Timmy')
+                    Object(self, 'Sprites/well.png', col, row)
+                if tile == 'j':
+                    Object(self, 'Sprites/grass.png', col, row)
+                    jeff = NPC(self, col, row, '001', 'Jeff')
+                if tile == 'P':
+                    Object(self, 'Sprites/grass.png', col, row)
+                    self.player = Player(self, col, row)
         self.npcs = [timmy, jeff]
-        self.npcs[1].npc_movement_grid()
-        self.player = Player(self, 21, 5)
+        self.camera = Camera(self.map.width, self.map.height)
 
     def run(self):
         # game loop - set self.playing = False to end the game
@@ -74,6 +87,7 @@ class Game:
             self.dt = self.clock.tick(FPS) / 1000
             self.events()
             self.draw()
+            self.enter_door()
             if not self.check_interact():
                 self.npcs[1].random_movement()
             self.draw_on_screen_text()
@@ -87,37 +101,31 @@ class Game:
     def update(self):
         # update portion of the game loop
         self.all_sprites.update()
+        self.camera.update(self.player)
         pg.display.flip()
+
+    def enter_door(self):
+        for door in self.doors:
+            if self.player.x == door.x and self.player.y == door.y:
+                print('Location')
+                self.location_change()
+
+    def location_change(self):
+        pass
 
     def draw_house(self, x, y, size):
         Block(self, x+1, y-1)
         for x in range(x, (x + size)):
             Block(self, x, y)
+        Door(self, x - 1, y + 1)
         House(self, x-2, y-1)
-
-    def draw_trees(self):
-        Object(self, 'Sprites/tree.png', 3, 3, 1)
-        Object(self, 'Sprites/tree.png', 7, 4, 1)
-        Object(self, 'Sprites/tree.png', 11, 4, 1)
-        Object(self, 'Sprites/tree.png', 10, 4, 1)
-        Object(self, 'Sprites/tree.png', 13, 1, 1)
-        for x in range(10, 22):
-            if x % 2:
-                Object(self, 'Sprites/tree.png', x, 12, 1)
-                # Around Well
-                for x in range(2, 5):
-                    Object(self, 'Sprites/tree.png', x, 5, 1)
-                    Object(self, 'Sprites/tree.png', x, 9, 1)
-                for y in range(6, 9):
-                    Object(self, 'Sprites/tree.png', 1, y, 1)
-                for y in range(6, 7):
-                    Object(self, 'Sprites/tree.png', 5, y, 1)
-                for y in range(8, 9):
-                    Object(self, 'Sprites/tree.png', 5, y, 1)
 
     def draw(self):
         self.screen.fill(BGCOLOR)
-        self.all_sprites.draw(self.screen)
+        #self.all_sprites.draw(self.screen)
+        for sprite in self.all_sprites:
+            self.screen.blit(sprite.image, self.camera.apply(sprite))
+        #pg.display.flip()
 
     def talk(self):
         self.current_dialogue_num = self.text.talk(self.object.name, self.current_dialogue_num, self.input)

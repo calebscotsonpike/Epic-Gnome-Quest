@@ -47,7 +47,7 @@ class Player(pg.sprite.Sprite):
 
     def interact(self, dx=1, dy=1):
         for npc in self.game.npcs:
-            if npc.x == self.x + dx or npc.y == self.y + dy or npc.x == self.x - dx or npc.y == self.y - dy:
+            if (npc.x == self.x + dx and npc.y == self.y) or (npc.y == self.y + dy and npc.x == self.x) or (npc.x == self.x - dx and npc.y == self.y) or (npc.y == self.y - dy and npc.x == self.x):
                 self.game.interact = True
                 self.game.object = npc
                 self.game.current_dialogue_num = npc.dialogue_num
@@ -131,6 +131,19 @@ class Block(pg.sprite.Sprite):
         self.rect.y = y * TILESIZE
 
 
+class Door(pg.sprite.Sprite):
+    def __init__(self, game, x, y):
+        self.groups = game.all_sprites, game.doors
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        self.image = pg.Surface((TILESIZE, TILESIZE))
+        self.image.fill(BLACK)
+        self.rect = self.image.get_rect()
+        self.x = x
+        self.y = y
+        self.rect.x = x * TILESIZE
+        self.rect.y = y * TILESIZE
+
 class House(pg.sprite.Sprite):
     def __init__(self, game, x, y):
         self.groups = game.all_sprites, game.houses
@@ -149,8 +162,11 @@ class Object(pg.sprite.Sprite):
     def __init__(self, game, sprite_path, x, y, collide=0):
         if collide == 1:
             self.groups = game.all_sprites, game.objects, game.walls
-        else:
+        elif collide == 2:
+            self.groups = game.all_sprites, game.objects, game.items
+        elif collide == 0:
             self.groups = game.all_sprites, game.objects
+
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
         image = pg.image.load(sprite_path).convert_alpha()
@@ -160,7 +176,6 @@ class Object(pg.sprite.Sprite):
         self.y = y
         self.rect.x = x * TILESIZE
         self.rect.y = y * TILESIZE
-
 
 class Grass(pg.sprite.Sprite):
     def __init__(self, game, x, y):
